@@ -1,2 +1,13 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+  import AudioPlayer from "$lib/components/AudioPlayer.svelte";
+  import Button from "$lib/components/Button.svelte";
+  import SoundBox from "$lib/components/SoundBox.svelte";
+</script>
+
+<h1>Scenario Listing</h1>
+
+<SoundBox icon={"/icons/bag_coin.jpg"} sound={"/sounds/coin-drop.mp3"} />
+
+<Button>Reprendre l'aventure</Button>
+
+<AudioPlayer />
