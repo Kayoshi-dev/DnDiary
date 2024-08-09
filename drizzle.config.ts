@@ -4,4 +4,7 @@ export default defineConfig({
   dialect: "sqlite",
   schema: "./db/schema",
   out: "./drizzle",
+  dbCredentials: {
+    url: "./dndiary.db",
+  },
 });

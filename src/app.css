@@ -4,4 +4,11 @@
 
 body {
     background-image: url('/bg.jpg');
+    cursor: url('/cursor/mouse.png'), default !important;
+    cursor: url('/cursor/pointer.png'), pointer;
+}
+
+/* Apply custom pointer cursor to specific elements */
+a, button, input[type="button"], input[type="submit"], input[type="reset"], input[type="range"], .custom-pointer {
+    cursor: url('/cursor/pointer.png'), pointer !important;
 }

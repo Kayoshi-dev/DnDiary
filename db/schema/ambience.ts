@@ -1,6 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
-export const scenarios = sqliteTable("scenarios", {
+export const ambience = sqliteTable("ambience", {
   id: integer("id").primaryKey(),
-  title: text("title"),
+  name: text("name"),
+  description: text("description"),
 });

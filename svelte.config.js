@@ -14,6 +14,15 @@ const config = {
     adapter: adapter(),
     alias: {
       $static: "./static",
+      $db: "./db/schema",
+    },
+  },
+
+  vitePlugin: {
+    inspector: {
+      toggleKeyCombo: "meta-shift",
+      showToggleButton: "always",
+      toggleButtonPos: "bottom-right",
     },
   },
 };
