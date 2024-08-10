@@ -1,0 +1,1 @@
+ALTER TABLE `scenarios` RENAME COLUMN `name` TO `title`;
