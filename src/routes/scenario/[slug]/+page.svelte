@@ -16,3 +16,9 @@
 </script>
 
 <h2>Ambience Manager</h2>
+
+<button
+  class="bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
+>
+  Create a new soundscape
+</button>

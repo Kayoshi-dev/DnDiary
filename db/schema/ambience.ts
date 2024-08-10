@@ -4,4 +4,5 @@ export const ambience = sqliteTable("ambience", {
   id: integer("id").primaryKey(),
   name: text("name"),
   description: text("description"),
+  url: text("url"),
 });

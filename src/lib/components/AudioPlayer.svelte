@@ -5,6 +5,7 @@
   let isPlaying = false;
   let currentTime = 0;
   let duration = 0;
+  let volume = 1;
 
   const playOrPauseAudio = () => {
     if (audioElement.paused) {
@@ -18,7 +19,6 @@
         } else {
           clearInterval(fadeInterval);
           audioElement.pause();
-          audioElement.volume = 1; // Reset volume
           isPlaying = false;
         }
       }, 100);
@@ -49,6 +49,7 @@
         type="range"
         min="0"
         max={duration}
+        step=".1"
         value={currentTime}
         id="range2"
         class="range-input"
@@ -67,19 +68,30 @@
         .padStart(2, "0")}
     </div>
 
-    <div class="flex-grow text-center">
-      <button
-        on:click={playOrPauseAudio}
-        class="button-style py-2 px-4 rounded-lg inline-flex items-center"
-      >
-        <span class="icon">
-          {#if isPlaying}
-            <Pause />
-          {:else}
-            <Play />
-          {/if}
-        </span>
-      </button>
+    <button
+      on:click={playOrPauseAudio}
+      class="button-style py-2 px-4 rounded-lg inline-flex items-center"
+    >
+      <span class="icon">
+        {#if isPlaying}
+          <Pause />
+        {:else}
+          <Play />
+        {/if}
+      </span>
+    </button>
+
+    <div class="flex items-center justify-end gap-2">
+      <img src="/icons/volume.png" alt="Volume" class="w-6 h-6" />
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step=".01"
+        bind:value={volume}
+        on:input={() => (audioElement.volume = volume)}
+        class="range-input volume-input"
+      />
     </div>
   </div>
 </div>
@@ -145,5 +157,9 @@
     background-image: url("/icons/luth.png");
     background-size: cover;
     border: 0;
+  }
+
+  .volume-input {
+    width: 60%;
   }
 </style>

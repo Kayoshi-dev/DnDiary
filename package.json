@@ -13,7 +13,8 @@
     "test:integration": "playwright test",
     "test:unit": "vitest",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "studio": "drizzle-kit studio"
   },
   "devDependencies": {
     "@playwright/test": "^1.46.0",
