@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Scenario {
+  id    String @id @default(uuid())
+  title String
+  slug  String
+}
+
+model Ambience {
+  id                    String                  @id @default(uuid())
+  name                  String                  @unique
+  description           String?
+  path                  String
+  category              Category                @relation(fields: [categoryId], references: [id])
+  categoryId            String
+  AmbiencesOnSoundscape AmbiencesOnSoundscape[]
+  keywords              Keyword[]
+  KeywordOnAmbience     KeywordOnAmbience[]
+}
+
+model Keyword {
+  id                String              @id @default(uuid())
+  name              String
+  Ambience          Ambience?           @relation(fields: [ambienceId], references: [id])
+  ambienceId        String?
+  KeywordOnAmbience KeywordOnAmbience[]
+}
+
+model KeywordOnAmbience {
+  id         String   @id @default(uuid())
+  keyword    Keyword  @relation(fields: [keywordId], references: [id])
+  keywordId  String
+  ambience   Ambience @relation(fields: [ambienceId], references: [id])
+  ambienceId String
+}
+
+model Category {
+  id       String     @id @default(uuid())
+  name     String     @unique
+  Ambience Ambience[]
+}
+
+model Soundscape {
+  id          String                  @id @default(uuid())
+  name        String
+  description String?
+  ambiences   AmbiencesOnSoundscape[]
+}
+
+model AmbiencesOnSoundscape {
+  id           String     @id @default(uuid())
+  ambience     Ambience   @relation(fields: [ambienceId], references: [id])
+  ambienceId   String
+  soundscape   Soundscape @relation(fields: [soundscapeId], references: [id])
+  soundscapeId String
+}

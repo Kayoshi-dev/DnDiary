@@ -1,5 +1,6 @@
 <script>
   import AudioPlayer from "$lib/components/AudioPlayer.svelte";
+  import { currentTrack } from "$lib/store/AudioPlayerStore";
   import "../app.css";
 </script>
 

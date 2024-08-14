@@ -6,9 +6,4 @@ export default defineConfig({
   test: {
     include: ["src/**/*.{test,spec}.{js,ts}"],
   },
-  resolve: {
-    alias: {
-      "$/static": "/static",
-    },
-  },
 });

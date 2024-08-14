@@ -8,7 +8,7 @@
 
   onMount(() => {
     const getAssets: Record<string, string> = import.meta.glob(
-      "$static/sounds/coins/*.mp3",
+      "/static/sounds/coins/*.mp3",
       {
         query: "?url",
         import: "default",

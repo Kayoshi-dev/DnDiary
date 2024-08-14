@@ -1,8 +1,7 @@
 <script lang="ts">
-  import AudioPlayer from "$lib/components/AudioPlayer.svelte";
   import Button from "$lib/components/Button.svelte";
   import SoundBox from "$lib/components/SoundBox.svelte";
-  import { slugify } from "$lib/utils/slugify";
+  import { getRandomId, slugify } from "$lib/utils/string";
   import type { PageServerData } from "./$types";
 
   export let data: PageServerData;
@@ -15,6 +14,8 @@
 <Button>Reprendre l'aventure</Button>
 
 <div class="flex flex-col items-center gap-2">
+  <a href={`/scenario/new`}>New scenario</a>
+  <br />
   {#each data.scenarios as scenario (scenario.id)}
     <a
       href={`/scenario/${slugify(scenario.title)}`}

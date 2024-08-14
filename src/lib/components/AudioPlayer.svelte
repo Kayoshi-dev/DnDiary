@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Pause, Play, Square } from "lucide-svelte";
+  import { currentTrack } from "$lib/store/AudioPlayerStore";
+  import { Pause, Play } from "lucide-svelte";
 
   let audioElement: HTMLAudioElement;
   let isPlaying = false;
@@ -34,11 +35,22 @@
     const target = event.target as HTMLInputElement;
     audioElement.currentTime = parseFloat(target.value);
   };
+
+  currentTrack.subscribe((track) => {
+    if (track) {
+      console.log(audioElement);
+      audioElement.src = track;
+
+      audioElement.load();
+      audioElement.play();
+      isPlaying = true;
+    }
+  });
 </script>
 
 <div class="p-6 w-full fixed bottom-0">
   <audio bind:this={audioElement} id="audio" on:timeupdate={updateTime}>
-    <source src="/ambience/mill_town.mp3" type="audio/mpeg" />
+    <source src={$currentTrack} type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
 
