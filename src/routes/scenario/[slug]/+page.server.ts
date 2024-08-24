@@ -5,6 +5,9 @@ import prisma from "$lib/server/Prisma";
 export const load: PageServerLoad = async ({ params }) => {
   try {
     const scenario = await prisma.scenario.findFirstOrThrow({
+      include: {
+        chapters: true,
+      },
       where: {
         slug: params.slug,
       },

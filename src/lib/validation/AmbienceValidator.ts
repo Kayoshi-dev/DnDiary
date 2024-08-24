@@ -5,7 +5,7 @@ export const AmbienceUploadSchema = z.object({
   description: z
     .string()
     .min(3, { message: "Description must have a value" })
-    .max(100)
+    .max(300)
     .optional(),
   category: z
     .string()

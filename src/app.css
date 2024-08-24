@@ -9,6 +9,6 @@ body {
 }
 
 /* Apply custom pointer cursor to specific elements */
-a, button, input[type="button"], input[type="submit"], input[type="reset"], input[type="range"], .custom-pointer {
+a, button, input[type="button"], input[type="submit"], input[type="reset"], input[type="range"], input[type="file"] .custom-pointer, label {
     cursor: url('/cursor/pointer.png'), pointer !important;
 }

@@ -11,9 +11,40 @@ datasource db {
 }
 
 model Scenario {
-  id    String @id @default(uuid())
-  title String
-  slug  String
+  id       String    @id @default(uuid())
+  title    String
+  slug     String
+  chapters Chapter[]
+}
+
+model Chapter {
+  id                   String                @id @default(uuid())
+  title                String
+  scenario             Scenario              @relation(fields: [scenarioId], references: [id])
+  scenarioId           String
+  Monster              Monster?              @relation(fields: [monsterId], references: [id])
+  monsterId            String?
+  Soundscape           Soundscape?           @relation(fields: [soundscapeId], references: [id])
+  soundscapeId         String?
+  SoundschapeOnChapter SoundscapeOnChapter[]
+  Sound                Sound?                @relation(fields: [soundId], references: [id])
+  soundId              String?
+}
+
+model Monster {
+  id        String    @id @default(uuid())
+  name      String
+  soundPath String
+  iconPath  String?
+  chapters  Chapter[]
+}
+
+model Sound {
+  id       String    @id @default(uuid())
+  name     String
+  path     String
+  iconPath String?
+  chapters Chapter[]
 }
 
 model Ambience {
@@ -51,10 +82,13 @@ model Category {
 }
 
 model Soundscape {
-  id          String                  @id @default(uuid())
-  name        String
-  description String?
-  ambiences   AmbiencesOnSoundscape[]
+  id                   String                  @id @default(uuid())
+  name                 String
+  description          String?
+  iconPath             String?
+  ambiences            AmbiencesOnSoundscape[]
+  chapters             Chapter[]
+  SoundschapeOnChapter SoundscapeOnChapter[]
 }
 
 model AmbiencesOnSoundscape {
@@ -63,4 +97,12 @@ model AmbiencesOnSoundscape {
   ambienceId   String
   soundscape   Soundscape @relation(fields: [soundscapeId], references: [id])
   soundscapeId String
+}
+
+model SoundscapeOnChapter {
+  id           String     @id @default(uuid())
+  soundscape   Soundscape @relation(fields: [soundscapeId], references: [id])
+  soundscapeId String
+  chapter      Chapter    @relation(fields: [chapterId], references: [id])
+  chapterId    String
 }
