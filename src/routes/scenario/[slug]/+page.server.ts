@@ -5,15 +5,25 @@ import prisma from "$lib/server/Prisma";
 export const load: PageServerLoad = async ({ params }) => {
   try {
     const scenario = await prisma.scenario.findFirstOrThrow({
-      include: {
-        chapters: true,
-      },
       where: {
         slug: params.slug,
       },
     });
 
-    return { scenario };
+    const chapters = await prisma.chapter.findMany({
+      where: {
+        scenarioId: scenario.id,
+      },
+      include: {
+        soundscapes: {
+          include: {
+            soundscape: true,
+          },
+        },
+      },
+    });
+
+    return { scenario, chapters };
   } catch (e: unknown) {
     console.log(e);
     error(404, {

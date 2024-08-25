@@ -12,23 +12,21 @@ datasource db {
 
 model Scenario {
   id       String    @id @default(uuid())
-  title    String
-  slug     String
+  title    String    @unique
+  slug     String    @unique
   chapters Chapter[]
 }
 
 model Chapter {
-  id                   String                @id @default(uuid())
-  title                String
-  scenario             Scenario              @relation(fields: [scenarioId], references: [id])
-  scenarioId           String
-  Monster              Monster?              @relation(fields: [monsterId], references: [id])
-  monsterId            String?
-  Soundscape           Soundscape?           @relation(fields: [soundscapeId], references: [id])
-  soundscapeId         String?
-  SoundschapeOnChapter SoundscapeOnChapter[]
-  Sound                Sound?                @relation(fields: [soundId], references: [id])
-  soundId              String?
+  id          String                  @id @default(uuid())
+  title       String
+  scenario    Scenario                @relation(fields: [scenarioId], references: [id])
+  scenarioId  String
+  Monster     Monster?                @relation(fields: [monsterId], references: [id])
+  monsterId   String?
+  soundscapes SoundscapesOnChapters[]
+  Sound       Sound?                  @relation(fields: [soundId], references: [id])
+  soundId     String?
 }
 
 model Monster {
@@ -48,15 +46,15 @@ model Sound {
 }
 
 model Ambience {
-  id                    String                  @id @default(uuid())
-  name                  String                  @unique
-  description           String?
-  path                  String
-  category              Category                @relation(fields: [categoryId], references: [id])
-  categoryId            String
-  AmbiencesOnSoundscape AmbiencesOnSoundscape[]
-  keywords              Keyword[]
-  KeywordOnAmbience     KeywordOnAmbience[]
+  id                String                  @id @default(uuid())
+  name              String                  @unique
+  description       String?
+  path              String
+  category          Category                @relation(fields: [categoryId], references: [id])
+  categoryId        String
+  soundscapes       AmbiencesOnSoundscape[]
+  keywords          Keyword[]
+  KeywordOnAmbience KeywordOnAmbience[]
 }
 
 model Keyword {
@@ -82,13 +80,12 @@ model Category {
 }
 
 model Soundscape {
-  id                   String                  @id @default(uuid())
-  name                 String
-  description          String?
-  iconPath             String?
-  ambiences            AmbiencesOnSoundscape[]
-  chapters             Chapter[]
-  SoundschapeOnChapter SoundscapeOnChapter[]
+  id          String                  @id @default(uuid())
+  name        String
+  description String?
+  iconPath    String?
+  ambiences   AmbiencesOnSoundscape[]
+  chapters    SoundscapesOnChapters[]
 }
 
 model AmbiencesOnSoundscape {
@@ -99,7 +96,7 @@ model AmbiencesOnSoundscape {
   soundscapeId String
 }
 
-model SoundscapeOnChapter {
+model SoundscapesOnChapters {
   id           String     @id @default(uuid())
   soundscape   Soundscape @relation(fields: [soundscapeId], references: [id])
   soundscapeId String

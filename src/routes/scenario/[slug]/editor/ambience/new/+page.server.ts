@@ -1,4 +1,4 @@
-import { slugify } from "$lib/utils/string";
+import { getUniqueFilename } from "$lib/utils/string";
 import { error, fail } from "@sveltejs/kit";
 import { writeFileSync } from "fs";
 import type { Actions, PageServerLoad } from "./$types";
@@ -35,22 +35,21 @@ export const actions = {
       });
     }
 
-    const fileExtension = parsedValues.data.fileToUpload.name.split(".").pop();
-    const uniqFilename = `${slugify(
-      parsedValues.data.name
-    )}-${Date.now()}.${fileExtension}`;
+    const uniqueFilename = getUniqueFilename(
+      parsedValues.data.fileToUpload.name
+    );
 
     try {
       writeFileSync(
-        `static/upload/${uniqFilename}`,
+        `static/upload/${uniqueFilename}`,
         Buffer.from(await parsedValues.data.fileToUpload.arrayBuffer())
       );
 
-      const newAmbience = await prisma.ambience.create({
+      await prisma.ambience.create({
         data: {
           name: parsedValues.data.name,
           description: parsedValues.data.description,
-          path: `/upload/${uniqFilename}`,
+          path: `/upload/${uniqueFilename}`,
           category: {
             connectOrCreate: {
               where: {
@@ -63,8 +62,6 @@ export const actions = {
           },
         },
       });
-
-      console.log(newAmbience);
     } catch (e: unknown) {
       if (e instanceof Error) {
         console.error("Error writing file:", e.message);

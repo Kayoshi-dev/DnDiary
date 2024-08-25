@@ -15,3 +15,13 @@ export const firstLetterUppercase = (text: string) => {
 export const getRandomId = () => {
   return Math.random().toString(36).substring(2, 11);
 };
+
+/**
+ * Must have an extension in the name
+ */
+export const getUniqueFilename = (name: string) => {
+  const fileExtension = name.split(".").pop();
+  const uniqFilename = `${slugify(name)}-${Date.now()}.${fileExtension}`;
+
+  return uniqFilename;
+};

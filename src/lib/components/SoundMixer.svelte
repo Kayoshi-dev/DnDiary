@@ -4,8 +4,6 @@
 
   let audios: HTMLAudioElement[] = [];
 
-  $: console.log(audios);
-
   const setVolume = (
     index: number,
     event: Event & { currentTarget: EventTarget & HTMLInputElement }

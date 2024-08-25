@@ -1,7 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import Autocomplete from "$lib/components/Autocomplete.svelte";
-  import { onMount } from "svelte";
   import type { PageServerData } from "./$types";
 
   export let data: PageServerData;

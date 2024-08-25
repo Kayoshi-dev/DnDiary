@@ -8,7 +8,6 @@
   export let ambience: AmbienceMixer;
 
   const setCurrentTrack = () => {
-    console.log(ambience.path);
     currentTrack.set(`${ambience.path}`);
   };
 

@@ -6,6 +6,8 @@
   import type { PageServerData } from "./$types";
   import SoundMixer from "$lib/components/SoundMixer.svelte";
   import type { Ambience } from "@prisma/client";
+  import { enhance } from "$app/forms";
+  import { currentAmbiences, type AmbienceMixer } from "$lib/store/SoundMixer";
 
   interface GroupedAssets {
     [folder: string]: Ambience[];
@@ -13,6 +15,15 @@
 
   let selectedFiles: FileList | null = null;
   let previewImage: string | null = null;
+
+  let formattedAmbiences: string[];
+  let localAmbiences: Ambience[] = [];
+
+  // Subscribe to the store to get the object
+  currentAmbiences.subscribe((value) => {
+    formattedAmbiences = value.map((ambience) => ambience.id);
+    localAmbiences = value;
+  });
 
   let groupedAssets: GroupedAssets = {};
 
@@ -54,8 +65,6 @@
       reader.readAsDataURL(file);
     }
   }
-
-  const saveSoundscape = () => {};
 </script>
 
 <div class="flex h-screen">
@@ -101,7 +110,7 @@
     </div>
 
     <div class="flex flex-col">
-      <form>
+      <form method="post" use:enhance enctype="multipart/form-data">
         <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
           >Name</label
         >
@@ -109,7 +118,7 @@
           type="text"
           id="name"
           name="name"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 sm:text-sm"
         />
 
         <label
@@ -121,15 +130,46 @@
           id="description"
           name="description"
           rows="4"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 sm:text-sm"
         ></textarea>
+
+        <label
+          for="chapter"
+          class="block text-sm font-medium text-gray-700 mt-4 mb-1"
+          >Chapter</label
+        >
+        <select
+          id="chapter"
+          name="chapter"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 sm:text-sm"
+        >
+          {#if data.scenario && data.scenario.chapters}
+            {#each data.scenario.chapters as chapter}
+              <option value={chapter.id}>{chapter.title}</option>
+            {/each}
+          {/if}
+        </select>
+
+        <label
+          for="ambiences"
+          class="block text-sm font-medium text-gray-700 mt-4 mb-1"
+          >Ambiences</label
+        >
+        <input
+          type="text"
+          id="ambiences"
+          name="ambiences"
+          value={formattedAmbiences}
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 sm:text-sm bg-gray-100 cursor-not-allowed text-gray-500"
+        />
+        {formattedAmbiences}
 
         <label
           for="image"
           class="block text-sm font-medium text-gray-700 mt-4 mb-1">Image</label
         >
         <div
-          class="relative mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus-within:ring-indigo-500 focus-within:border-indigo-500 sm:text-sm"
+          class="relative mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus-within:ring-red-700 focus-within:border-red-700 sm:text-sm"
         >
           <div class="flex items-center justify-center h-36">
             {#if selectedFiles}
@@ -145,6 +185,7 @@
               type="file"
               id="image"
               name="image"
+              accept="image/*"
               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               bind:files={selectedFiles}
               on:change={handleFileChange}
@@ -153,9 +194,7 @@
         </div>
 
         <button
-          type="submit"
           class="bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
-          on:click={saveSoundscape}
         >
           Save
         </button>

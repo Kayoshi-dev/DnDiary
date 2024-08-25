@@ -22,7 +22,6 @@
   });
 
   const playRandomSound = () => {
-    console.log(audioAssets);
     const randomSound =
       audioAssets[Math.floor(Math.random() * audioAssets.length)];
 

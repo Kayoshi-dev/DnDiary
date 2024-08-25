@@ -2,6 +2,7 @@
   import { page } from "$app/stores";
   import { PlusCircle } from "lucide-svelte";
   import type { PageServerData } from "./$types";
+  import { onMount } from "svelte";
 
   export let data: PageServerData;
 </script>
@@ -31,7 +32,7 @@
 </div>
 
 <div class="flex flex-col items-center">
-  {#each data.scenario.chapters as chapter}
+  {#each data.chapters as chapter}
     <h2
       class="text-xl md:text-2xl font-semibold tracking-wide text-gray-500 drop-shadow-sm italic"
     >
@@ -42,17 +43,22 @@
       <button>
         <PlusCircle size="24" />
       </button>
-      <!-- {#each chapter.ambiences as ambience}
-        <div class="m-4">
-          <a
-            href={`/scenario/${$page.params.slug}/editor/ambience/${ambience.id}`}
-            class="bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
-          >
-            {ambience.title}
-          </a>
-        </div>
-      {/each} -->
     </div>
+
+    {#each chapter.soundscapes as soundscapeChapter}
+      <span class="text-lg font-bold text-gray-700 italic drop-shadow-md">
+        {soundscapeChapter.soundscape.name}
+      </span>
+      <button
+        class="w-20 h-20 rounded-full bg-red-700 border-2 border-red-700 shadow-lg transform hover:scale-110 transition-transform duration-300 flex items-center justify-center"
+      >
+        <img
+          src={soundscapeChapter.soundscape.iconPath}
+          alt={soundscapeChapter.soundscape.name}
+          class="w-full h-full rounded-full"
+        />
+      </button>
+    {/each}
   {/each}
 </div>
 

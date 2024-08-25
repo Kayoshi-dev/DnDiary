@@ -38,7 +38,6 @@
 
   currentTrack.subscribe((track) => {
     if (track) {
-      console.log(audioElement);
       audioElement.src = track;
 
       audioElement.load();
