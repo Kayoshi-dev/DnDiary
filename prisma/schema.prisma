@@ -94,6 +94,8 @@ model AmbiencesOnSoundscape {
   ambienceId   String
   soundscape   Soundscape @relation(fields: [soundscapeId], references: [id])
   soundscapeId String
+  volume       Int
+  loop         Boolean
 }
 
 model SoundscapesOnChapters {
