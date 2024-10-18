@@ -5,24 +5,32 @@
   import { onMount } from "svelte";
   import type { PageServerData } from "./$types";
   import SoundMixer from "$lib/components/SoundMixer.svelte";
-  import type { Ambience } from "@prisma/client";
-  import { enhance } from "$app/forms";
+  import type { Soundscape } from "@prisma/client";
   import { currentAmbiences, type AmbienceMixer } from "$lib/store/SoundMixer";
 
   interface GroupedAssets {
-    [folder: string]: Ambience[];
+    [folder: string]: AmbienceMixer[];
   }
 
   let selectedFiles: FileList | null = null;
   let previewImage: string | null = null;
 
-  let formattedAmbiences: string[];
-  let localAmbiences: Ambience[] = [];
+  let localAmbiences: AmbienceMixer[] = [];
+
+  const formValues: Omit<Soundscape, "id"> & {
+    chapter: string | undefined;
+    ambiences: AmbienceMixer[];
+  } = {
+    iconPath: "",
+    name: "",
+    description: "",
+    ambiences: [],
+    chapter: undefined,
+  };
 
   // Subscribe to the store to get the object
   currentAmbiences.subscribe((value) => {
-    formattedAmbiences = value.map((ambience) => ambience.id);
-    localAmbiences = value;
+    formValues.ambiences = value;
   });
 
   let groupedAssets: GroupedAssets = {};
@@ -44,14 +52,12 @@
         if (!acc[category]) {
           acc[category] = [];
         }
-        acc[category].push(ambience);
+        acc[category].push({ ...ambience, loop: false, volume: 1 });
         return acc;
       },
       {}
     );
   });
-
-  $: console.log(previewImage);
 
   function handleFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -65,6 +71,36 @@
       reader.readAsDataURL(file);
     }
   }
+
+  const createNewSoundscape = async () => {
+    const newSoundscape = await fetch("/api/soundscape", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formValues),
+    });
+
+    // if (newSoundscape.ok && selectedFiles) {
+    //   const data: Soundscape = await newSoundscape.json();
+
+    //   const formData = new FormData();
+    //   formData.append("image", selectedFiles?.item(0) as Blob);
+
+    //   const res = await fetch("/api/soundscape", {
+    //     method: "POST",
+    //     body: formData,
+    //   });
+
+    //   if (res.ok) {
+    //     console.log("Image uploaded successfully");
+    //   } else {
+    //     console.error("Error uploading image");
+    //   }
+    // } else {
+    //   console.error("Error creating soundscape");
+    // }
+  };
 </script>
 
 <div class="flex h-screen">
@@ -110,11 +146,12 @@
     </div>
 
     <div class="flex flex-col">
-      <form method="post" use:enhance enctype="multipart/form-data">
+      <form on:submit={createNewSoundscape}>
         <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
           >Name</label
         >
         <input
+          bind:value={formValues.name}
           type="text"
           id="name"
           name="name"
@@ -127,6 +164,7 @@
           >Description</label
         >
         <textarea
+          bind:value={formValues.description}
           id="description"
           name="description"
           rows="4"
@@ -139,6 +177,7 @@
           >Chapter</label
         >
         <select
+          bind:value={formValues.chapter}
           id="chapter"
           name="chapter"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 sm:text-sm"
@@ -149,20 +188,6 @@
             {/each}
           {/if}
         </select>
-
-        <label
-          for="ambiences"
-          class="block text-sm font-medium text-gray-700 mt-4 mb-1"
-          >Ambiences</label
-        >
-        <input
-          type="text"
-          id="ambiences"
-          name="ambiences"
-          value={formattedAmbiences}
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 sm:text-sm bg-gray-100 cursor-not-allowed text-gray-500"
-        />
-        {formattedAmbiences}
 
         <label
           for="image"

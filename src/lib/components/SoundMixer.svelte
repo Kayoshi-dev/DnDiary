@@ -1,6 +1,6 @@
 <script lang="ts">
   import { currentAmbiences } from "$lib/store/SoundMixer";
-  import { CrossIcon, X } from "lucide-svelte";
+  import { X } from "lucide-svelte";
 
   let audios: HTMLAudioElement[] = [];
 
@@ -10,6 +10,7 @@
   ) => {
     const target = event.target as HTMLInputElement;
     audios[index].volume = parseFloat(target.value);
+    $currentAmbiences[index].volume = parseFloat(target.value);
   };
 </script>
 
@@ -31,6 +32,22 @@
         on:input={(e) => setVolume(index, e)}
       />
       <div class="mt-2 text-black font-bold">{ambience.name}</div>
+      <!-- {#if audios.length > 0}
+        
+      {/if} -->
+
+      <div>
+        <span class="text-black">Volume: </span>
+        <span class="text-black">{$currentAmbiences[index].volume}</span>
+      </div>
+      <div>
+        <span class="text-black">Loop: </span>
+        <input
+          type="checkbox"
+          class="text-black"
+          bind:checked={$currentAmbiences[index].loop}
+        />
+      </div>
       <button
         on:click={() =>
           currentAmbiences.update((ambiences) =>

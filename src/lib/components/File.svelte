@@ -1,9 +1,7 @@
 <script lang="ts">
   import { currentTrack } from "$lib/store/AudioPlayerStore";
   import { currentAmbiences, type AmbienceMixer } from "$lib/store/SoundMixer";
-  import type { Ambience } from "@prisma/client";
   import { AudioLines, ListMusic, Play } from "lucide-svelte";
-  import { onMount } from "svelte";
 
   export let ambience: AmbienceMixer;
 

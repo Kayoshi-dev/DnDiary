@@ -10,6 +10,7 @@ export const load: PageServerLoad = async ({ params }) => {
       },
     });
 
+    //pretty shitty lol
     const chapters = await prisma.chapter.findMany({
       where: {
         scenarioId: scenario.id,
@@ -17,7 +18,15 @@ export const load: PageServerLoad = async ({ params }) => {
       include: {
         soundscapes: {
           include: {
-            soundscape: true,
+            soundscape: {
+              include: {
+                ambiences: {
+                  include: {
+                    ambience: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
