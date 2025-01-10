@@ -2,7 +2,6 @@
   import { page } from "$app/stores";
   import { PlusCircle } from "lucide-svelte";
   import type { PageServerData } from "./$types";
-  import { onMount } from "svelte";
 
   export let data: PageServerData;
 
@@ -64,9 +63,9 @@
       </button>
 
       {#each chapter.soundscapes as soundscapeChapter}
-        <span class="text-lg font-bold text-gray-700 italic drop-shadow-md">
+        <!-- <span class="text-lg font-bold text-gray-700 italic drop-shadow-md">
           {soundscapeChapter.soundscape.name}
-        </span>
+        </span> -->
         <button
           on:click={() => playSoundscape(soundscapeChapter)}
           class="w-20 h-20 rounded-full bg-red-700 border-2 border-red-700 shadow-lg transform hover:scale-110 transition-transform duration-300 flex items-center justify-center"

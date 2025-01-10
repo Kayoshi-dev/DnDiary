@@ -15,13 +15,10 @@
   let selectedFiles: FileList | null = null;
   let previewImage: string | null = null;
 
-  let localAmbiences: AmbienceMixer[] = [];
-
-  const formValues: Omit<Soundscape, "id"> & {
+  const formValues: Omit<Soundscape, "id" | "iconPath"> & {
     chapter: string | undefined;
     ambiences: AmbienceMixer[];
   } = {
-    iconPath: "",
     name: "",
     description: "",
     ambiences: [],
@@ -73,33 +70,23 @@
   }
 
   const createNewSoundscape = async () => {
-    const newSoundscape = await fetch("/api/soundscape", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValues),
+    const form = new FormData();
+    form.append("image", selectedFiles?.item(0) as Blob);
+
+    Object.entries(formValues).forEach(([key, value]) => {
+      if (value) {
+        if (key === "ambiences") {
+          form.append(key, JSON.stringify(value));
+        } else {
+          form.append(key, value as string); //Forcing type here as I know it's a string
+        }
+      }
     });
 
-    // if (newSoundscape.ok && selectedFiles) {
-    //   const data: Soundscape = await newSoundscape.json();
-
-    //   const formData = new FormData();
-    //   formData.append("image", selectedFiles?.item(0) as Blob);
-
-    //   const res = await fetch("/api/soundscape", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-
-    //   if (res.ok) {
-    //     console.log("Image uploaded successfully");
-    //   } else {
-    //     console.error("Error uploading image");
-    //   }
-    // } else {
-    //   console.error("Error creating soundscape");
-    // }
+    fetch("/api/soundscape", {
+      method: "POST",
+      body: form,
+    });
   };
 </script>
 

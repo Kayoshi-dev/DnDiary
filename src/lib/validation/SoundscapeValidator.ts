@@ -21,5 +21,5 @@ export const SoundscapeValidator = z.object({
     .optional(),
   ambiences: z.array(AmbienceSchema),
   chapter: z.string({ message: "Chapter must have a value" }),
-  // image: z.instanceof(File, { message: "Image must have a value" }),
+  image: z.instanceof(File, { message: "Image must have a value" }),
 });

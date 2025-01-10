@@ -1,7 +1,7 @@
 <script lang="ts">
   import Button from "$lib/components/Button.svelte";
   import SoundBox from "$lib/components/SoundBox.svelte";
-  import { getRandomId, slugify } from "$lib/utils/string";
+  import { slugify } from "$lib/utils/string";
   import type { PageServerData } from "./$types";
 
   export let data: PageServerData;
