@@ -2,26 +2,79 @@
   import { page } from "$app/stores";
   import { PlusCircle } from "lucide-svelte";
   import type { PageServerData } from "./$types";
+  import SidePanel from "$lib/components/SidePanel.svelte";
 
   export let data: PageServerData;
 
+  let AmbiencesPlaying: {
+    id: string;
+    name: string;
+    path: string;
+    description: string | null;
+    categoryId: string;
+    volume: number;
+    audio: HTMLAudioElement;
+  }[] = [];
+  let isSidePanelOpen = false;
+
   // Need to fix typing here, and probably load the data in a clever way
-  const playSoundscape = (x: any) => {
-    const baba = x.soundscape.ambiences.map((a: any) => {
+  const playSoundscape = (
+    x: {
+      soundscape: {
+        ambiences: ({
+          ambience: {
+            id: string;
+            name: string;
+            path: string;
+            description: string | null;
+            categoryId: string;
+          };
+        } & {
+          id: string;
+          soundscapeId: string;
+          ambienceId: string;
+          volume: number;
+          loop: boolean;
+        })[];
+      } & {
+        id: string;
+        name: string;
+        description: string | null;
+        iconPath: string | null;
+      };
+    } & { id: string; soundscapeId: string; chapterId: string }
+  ) => {
+    isSidePanelOpen = true;
+
+    AmbiencesPlaying = x.soundscape.ambiences.map((a) => {
+      const audio = new Audio(a.ambience.path);
+      audio.volume = a.volume;
+      audio.loop = a.loop;
+      audio.play();
+
       return {
-        loop: a.loop,
+        ...a.ambience,
         volume: a.volume,
-        path: a.ambience.path,
+        audio,
       };
     });
+  };
 
-    baba.forEach((c: any) => {
-      const audio = new Audio(c.path);
-      audio.volume = c.volume;
-      audio.loop = c.loop;
-
-      audio.play();
-    });
+  const updateVolume = (
+    ambience: {
+      id: string;
+      name: string;
+      path: string;
+      description: string | null;
+      categoryId: string;
+      volume: number;
+      audio: HTMLAudioElement;
+    },
+    e: Event
+  ) => {
+    console.log("updatingVolume", ambience, e);
+    const target = e.target as HTMLInputElement;
+    ambience.audio.volume = parseFloat(target.value);
   };
 </script>
 
@@ -80,6 +133,24 @@
     </div>
   {/each}
 </div>
+
+<SidePanel isOpen={isSidePanelOpen}>
+  <h2>Side panel</h2>
+
+  {#each AmbiencesPlaying as ambience}
+    <div>
+      <h3>{ambience.name}</h3>
+      <input
+        type="range"
+        value={ambience.volume}
+        min="0"
+        max="1"
+        step="0.1"
+        on:input={(e) => updateVolume(ambience, e)}
+      />
+    </div>
+  {/each}
+</SidePanel>
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap");

@@ -7,6 +7,9 @@
   import SoundMixer from "$lib/components/SoundMixer.svelte";
   import type { Soundscape } from "@prisma/client";
   import { currentAmbiences, type AmbienceMixer } from "$lib/store/SoundMixer";
+  import { toast } from "svelte-sonner";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
 
   interface GroupedAssets {
     [folder: string]: AmbienceMixer[];
@@ -33,6 +36,8 @@
   let groupedAssets: GroupedAssets = {};
 
   export let data: PageServerData;
+
+  $: slug = $page.params.slug;
 
   onMount(() => {
     console.log(data);
@@ -86,6 +91,9 @@
     fetch("/api/soundscape", {
       method: "POST",
       body: form,
+    }).then((res) => {
+      toast.success("Soundscape created successfully");
+      goto(`/scenario/${slug}`);
     });
   };
 </script>
